@@ -252,7 +252,12 @@ def product(nums):
     return reduce((lambda x, y : x* y), *nums)
 
 print(f'answer for pairs {product(pairs)}')
-# answer = 969024
+
 
 print(f'answer for triplets {product(triplets)}')
-# answer = 230057040
+
+# output
+# pairs [(1236, 784)]
+# triplets [(1065, 368, 587)]
+# answer for pairs 969024
+# answer for triplets 230057040
