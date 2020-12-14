@@ -238,7 +238,7 @@ input = """
 8-9 s: ssdvssbss
 11-13 q: qqqpqqqqqqrqq
 2-13 w: wvcwwwwwcwvmwmwwwww
-9-12 r: rrrrrprrgrrhrr
+9-12 r: rrrrrpTotal treesrrgrrhrr
 10-13 m: mmmmmmmmwfmmmmm
 9-14 t: vgsrtrxzltkvbtt
 2-3 j: sjjj
