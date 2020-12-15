@@ -432,11 +432,11 @@ Loop till the end of text which is lenght -1
 '''
 def count_trees(step_y,step_x, path):
     input = path.strip().splitlines()
-    lenghth = len(input)
+    length = len(input)
     width = len(input[0])
     pointer = 0
     x, y, trees = 0, 0, 0
-    while y < lenghth -1:
+    while y < length -1:
         x, y = x + step_x, y+step_y
         small_x = x%width
         if (input[y][small_x] == '#'):
