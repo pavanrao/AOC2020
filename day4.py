@@ -1028,6 +1028,24 @@ iyr:2017 ecl:blu byr:1942 hcl:#733820 eyr:2023 hgt:151cm pid:289923625
 """
 
 
+'''PART 2 Rules
+You can continue to ignore the cid field, but each other field has strict rules about what values are valid for automatic validation:
+
+    byr (Birth Year) - four digits; at least 1920 and at most 2002.
+    iyr (Issue Year) - four digits; at least 2010 and at most 2020.
+    eyr (Expiration Year) - four digits; at least 2020 and at most 2030.
+    hgt (Height) - a number followed by either cm or in:
+        If cm, the number must be at least 150 and at most 193.
+        If in, the number must be at least 59 and at most 76.
+    hcl (Hair Color) - a # followed by exactly six characters 0-9 or a-f.
+    ecl (Eye Color) - exactly one of: amb blu brn gry grn hzl oth.
+    pid (Passport ID) - a nine-digit number, including leading zeroes.
+    cid (Country ID) - ignored, missing or not.
+
+Your job is to count the passports where all required fields are both present and valid according to the above rules.
+'''
+
+
 def format_data(input:str):
     # get passport data in one line
     return [
@@ -1071,10 +1089,112 @@ print(f'sample result = {validate_passports(sample)}')
 
 print(f'input result = {validate_passports(input)}')
 
-# for passport in format_data(input):
-#     print(passport)
-#     print(get_keys(passport))
-#     print( VALID_KEYS >= get_keys(passport))
+
 
 # sample result = 2
 # input result = 192
+
+def validate_min_max(min, max, value):
+    return int(min) <= int(value) <= int(max)
+
+def validate_yr(min, max, year):
+    if re.match(r'(\d{4})', year):
+        return validate_min_max(min, max, year)
+    return False
+
+def validate_byr(byr):
+    # byr (Birth Year) - four digits; at least 1920 and at most 2002.
+    return validate_yr(1920, 2002, byr)
+
+def validate_iyr(iyr):
+    # iyr (Issue Year) - four digits; at least 2010 and at most 2020.
+    return validate_yr(2010, 2020, iyr)
+
+def validate_eyr(eyr):
+    # eyr (Expiration Year) - four digits; at least 2020 and at most 2030.
+    return validate_yr(2020, 2030, eyr)
+
+
+
+
+
+import re
+
+def validate_hgt(height):
+    # hgt (Height) - a number followed by either cm or in:
+    #   If cm, the number must be at least 150 and at most 193.
+    #   If in, the number must be at least 59 and at most 76.
+    if re.match(r'(\d+(cm|in)$)', height):
+        _, value, unit = re.split(r'(\d+)', height)
+        if unit == 'cm':
+            return validate_min_max(150, 193, value)
+        else:
+            return validate_min_max(59, 76, value)
+    return False
+
+
+
+def validate_hcl(hair):
+    # hcl (Hair Color) - a # followed by exactly six characters 0-9 or a-f.
+    return bool(re.match(r'(^#([0-9]|[a-f]){6}$)', hair))
+
+EYE_COLOR = {
+    'amb',
+    'blu',
+    'brn',
+    'gry',
+    'grn',
+    'hzl',
+    'oth',
+}
+
+def validate_ecl(ecl):
+    # ecl (Eye Color) - exactly one of: amb blu brn gry grn hzl oth.
+    return ecl in EYE_COLOR
+
+def validate_pid(pid):
+    # pid (Passport ID) - a nine-digit number, including leading zeroes.
+    return bool(re.match(r'(^\d{9}$)', pid))
+
+
+def passport_dict(passport:str):
+    # collect keys in a set
+    result = dict(
+        entry.strip().split(':')
+        for entry in passport.strip().split()
+        if entry.strip().split(':')[0] != 'cid'
+    )
+    return result
+
+validate_dispatch = {
+    'byr' : validate_byr,
+    'iyr' : validate_iyr,
+    'eyr' : validate_eyr,
+    'hgt' : validate_hgt,
+    'hcl' : validate_hcl,
+    'ecl' : validate_ecl,
+    'pid' : validate_pid,
+}
+
+def validate_passport_part_two(passport_str:str):
+    passport = passport_dict(passport_str)
+    if VALID_KEYS <= passport.keys():
+        return all(
+            [validate_dispatch[key](value) for key, value in passport.items()]
+        )
+    else:
+        return False
+        
+
+def validate_part_two(passports):
+    return sum(
+        [
+            validate_passport_part_two(passport)
+            for passport in format_data(passports)
+        ]
+    )
+        
+
+print(f'part two result = {validate_part_two(input)}')
+
+# part two result = 101
