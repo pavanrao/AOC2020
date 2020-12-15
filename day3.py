@@ -409,4 +409,51 @@ print(f'Part 2 solution is {prod(trees_per_direction)}')
 # trees in input - part one = 148
 # Part 2 solution is 1255040000 -- incorrect
 
- 
+
+
+'''
+This is a better method. 
+We don't have to extend line. 
+Assume the input is of lenght 10, each line of 5 characters.
+step - x, y -- 3, 1 => 3 right 1 down
+Here is howit goes:
+x,y
+0,0
+3,1
+6,2
+9,3
+12,4 -- is nothing but 2,4 as the line extends
+15,5 -- is nothing but 5,4 as the line extends
+
+Calculate x modulo line width to get the extended value of x
+
+Also, loop over using the step values of x, y instead of looping one line at a time. 
+Loop till the end of text which is lenght -1
+'''
+def count_trees(step_y,step_x, path):
+    input = path.strip().splitlines()
+    lenghth = len(input)
+    width = len(input[0])
+    pointer = 0
+    x, y, trees = 0, 0, 0
+    while y < lenghth -1:
+        x, y = x + step_x, y+step_y
+        small_x = x%width
+        if (input[y][small_x] == '#'):
+            trees += 1
+    return trees
+    
+print(count_trees(1,3,input))
+
+trees_part2 = [
+    count_trees(step_y=down, step_x = right, path=input )
+    for right, down in directions
+]
+
+
+print(f'Trees in part 2 are: {trees_part2}')
+print(f'Part 2 solution is {prod(trees_part2)}')
+
+# Correct answer for part 2
+# [50, 148, 53, 64, 29]
+# Part 2 solution is 727923200
