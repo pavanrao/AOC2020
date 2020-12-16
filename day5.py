@@ -889,6 +889,19 @@ FBFFFFBRLL
 FBFFBFBLRL
 '''
 
+
+'''
+--- Part Two ---
+
+Ding! The "fasten seat belt" signs have turned on. Time to find your seat.
+
+It's a completely full flight, so your seat should be the only missing boarding pass in your list. However, there's a catch: some of the seats at the very front and back of the plane don't exist on this aircraft, so they'll be missing from your list as well.
+
+Your seat wasn't at the very front or back, though; the seats with IDs +1 and -1 from yours will be in your list.
+
+What is the ID of your seat?
+
+'''
 def go_to(min, max, upper):
     if upper:
         return min, (min + max)//2
@@ -909,14 +922,28 @@ def find_position(path):
     seat_id = row_min * 8 + col_min
     return seat_id
 
-def get_max_seat_id(input:str):
-    return max(
-        [
+
+def get_all_seat_id(input:str):
+    return [
             find_position(path)
             for path in input.strip().splitlines()
         ]
-    )
+    
 
-print(f"part 1 sample result = {get_max_seat_id(sample)}")    
-print(f"part 1 input result = {get_max_seat_id(input)}")    
+all_seats = sorted(get_all_seat_id(input))
 
+print(f"part 1 sample result = {max(get_all_seat_id(sample))}")    
+print(f"part 1 input result = {max(all_seats)}")    
+
+
+def find_one_missing_seat(all_seats):
+    min_seat = min(all_seats)
+    for index, seat in enumerate(all_seats):
+        if all_seats[index] != index + min_seat:
+            return (index + min_seat ) 
+
+print(f"part 2  result = {find_one_missing_seat(all_seats)}")    
+
+# part 1 sample result = 567
+# part 1 input result = 919
+# part 2  result = 642
